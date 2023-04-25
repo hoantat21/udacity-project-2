@@ -28,7 +28,16 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
+  app.get("/filteredimage", async (req:express.request, res:express.response) => {
+    const {image_url} = req.query;
+    if (!image_url) {
+      res.status(400).send('bad request');
+    }
+    const filteredpath = await filterImageFromURL(image_url);
+    res.sendFile(filteredpath);
+    res.on("finish", () => deleteLocalFiles([filteredpath]));
 
+  })
   //! END @TODO1
   
   // Root Endpoint
